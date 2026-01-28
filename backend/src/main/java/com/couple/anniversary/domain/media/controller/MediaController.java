@@ -6,6 +6,11 @@ import com.couple.anniversary.domain.media.entity.MediaFile;
 import com.couple.anniversary.domain.media.service.MediaService;
 import com.couple.anniversary.domain.user.entity.User;
 import com.couple.anniversary.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,14 +26,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/media")
 @RequiredArgsConstructor
+@Tag(name = "Media", description = "API endpoints for media file management")
+@SecurityRequirement(name = "bearerAuth")
 public class MediaController {
 
     private final MediaService mediaService;
     private final UserService userService;
 
-    @PostMapping("/upload")
+    @Operation(summary = "Upload a media file", description = "Upload a new media file (image, video, etc.)")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "File uploaded successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid file"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<MediaFileResponse>> upload(
-            @RequestParam("file") MultipartFile file,
+            @Parameter(description = "File to upload") @RequestParam("file") MultipartFile file,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         User owner = userService.findByUsername(userDetails.getUsername());
@@ -37,9 +50,14 @@ public class MediaController {
         return ResponseEntity.ok(ApiResponse.success("File uploaded successfully", response));
     }
 
+    @Operation(summary = "List media files", description = "Get list of media files for the authenticated user")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Files retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @GetMapping
     public ResponseEntity<ApiResponse<List<MediaFileResponse>>> list(
-            @RequestParam(name = "type", required = false) String type,
+            @Parameter(description = "Filter by file type (image, video, etc.)") @RequestParam(name = "type", required = false) String type,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         User owner = userService.findByUsername(userDetails.getUsername());
@@ -48,8 +66,14 @@ public class MediaController {
         return ResponseEntity.ok(ApiResponse.success(files));
     }
 
+    @Operation(summary = "Download a media file", description = "Download a specific media file by ID (public access)")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "File downloaded successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "File not found")
+    })
     @GetMapping("/{id}/download")
-    public ResponseEntity<Resource> download(@PathVariable Long id) {
+    public ResponseEntity<Resource> download(
+            @Parameter(description = "Media file ID") @PathVariable Long id) {
         MediaFile mediaFile = mediaService.getMediaFile(id);
         Resource resource = mediaService.loadFileAsResource(id);
 
@@ -60,9 +84,16 @@ public class MediaController {
                 .body(resource);
     }
 
+    @Operation(summary = "Delete a media file", description = "Delete a specific media file by ID")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "File deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - not owner"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "File not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(
-            @PathVariable Long id,
+            @Parameter(description = "Media file ID") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         User owner = userService.findByUsername(userDetails.getUsername());

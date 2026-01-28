@@ -1,4 +1,5 @@
-FROM eclipse-temurin:17-jdk-alpine as build
+# ---------- BUILD STAGE ----------
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /workspace/app
 
 COPY mvnw .
@@ -8,14 +9,12 @@ COPY src src
 
 RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
+# ---------- RUNTIME STAGE ----------
 FROM eclipse-temurin:17-jre-alpine
 VOLUME /tmp
 
-ARG DEPENDENCY=/workspace/app/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ARG JAR_FILE=/workspace/app/target/*.jar
+COPY --from=build ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.couple.anniversary.AnniversaryBackendApplication"]
+ENTRYPOINT ["java","-jar","/app.jar"]

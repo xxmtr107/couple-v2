@@ -31,6 +31,22 @@ app:
     dir: ${UPLOAD_DIR:C:/anniversary_uploads}
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  swagger:
+    server-url: ${SWAGGER_SERVER_URL:https://couple-v2.onrender.com}
+
+# Swagger / OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+  show-actuator: false
 
 server:
   port: ${SERVER_PORT:8080}
