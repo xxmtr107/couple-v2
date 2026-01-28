@@ -1,5 +1,5 @@
 # ---------- BUILD STAGE ----------
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /workspace/app
 
 COPY mvnw .
@@ -11,7 +11,7 @@ RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
 
 # ---------- RUNTIME STAGE ----------
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 VOLUME /tmp
 
 ARG JAR_FILE=/workspace/app/target/*.jar
