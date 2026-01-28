@@ -1,0 +1,65 @@
+.inputWrapper {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #ff8fab;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.inputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid #ffd6e0;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #5c4d5c;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.input::placeholder {
+    color: #c9a7b3;
+}
+
+.input:focus {
+    border-color: #ffb3c6;
+    box-shadow: 0 0 0 4px rgba(255, 179, 198, 0.2);
+    background: #fff;
+}
+
+.withIcon {
+    padding-left: 3rem;
+}
+
+.icon {
+    position: absolute;
+    left: 1.2rem;
+    color: #ffb3c6;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.hasError {
+    border-color: #ff6b8a;
+}
+
+.error {
+    display: block;
+    margin-top: 0.4rem;
+    margin-left: 1rem;
+    color: #ff6b8a;
+    font-size: 0.85rem;
+}

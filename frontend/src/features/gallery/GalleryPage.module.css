@@ -1,0 +1,58 @@
+.container {
+    position: relative;
+}
+
+.intro {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.title {
+    margin: 0 0 0.5rem;
+    font-size: 1.8rem;
+    color: #fff;
+    text-shadow: 0 2px 15px rgba(255, 143, 171, 0.4);
+}
+
+.subtitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #fff;
+}
+
+.loadingIcon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 1.4rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+}

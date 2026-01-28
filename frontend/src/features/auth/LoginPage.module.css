@@ -1,0 +1,37 @@
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.error {
+    background: linear-gradient(135deg, rgba(255, 107, 138, 0.1), rgba(255, 143, 171, 0.1));
+    border: 1px solid #ff8fab;
+    color: #ff6b8a;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.submitBtn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.link {
+    margin-top: 1.5rem;
+    color: #8a7a8a;
+    font-size: 0.9rem;
+}
+
+.linkText {
+    color: #ff8fab;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.linkText:hover {
+    color: #fb6f92;
+    text-decoration: underline;
+}

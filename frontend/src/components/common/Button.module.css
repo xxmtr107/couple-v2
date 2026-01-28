@@ -1,0 +1,97 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Sizes */
+.small {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+}
+
+.medium {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+}
+
+.large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Variants */
+.primary {
+    background: linear-gradient(135deg, #ff8fab 0%, #ffb3c6 50%, #ffc2d1 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 143, 171, 0.4);
+}
+
+.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 143, 171, 0.5);
+}
+
+.secondary {
+    background: rgba(255, 255, 255, 0.9);
+    color: #ff8fab;
+    border: 2px solid #ffb3c6;
+}
+
+.secondary:hover:not(:disabled) {
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+.ghost {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
+}
+
+.danger {
+    background: linear-gradient(135deg, #ff6b8a 0%, #ff8fab 100%);
+    color: #fff;
+}
+
+.danger:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ff5a7d 0%, #ff7a9e 100%);
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

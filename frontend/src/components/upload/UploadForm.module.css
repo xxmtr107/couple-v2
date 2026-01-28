@@ -1,0 +1,112 @@
+.card {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dropzone {
+    border: 3px dashed #ffb3c6;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 214, 224, 0.2);
+}
+
+.dropzone:hover,
+.dragActive {
+    border-color: #ff8fab;
+    background: rgba(255, 179, 198, 0.2);
+    transform: scale(1.02);
+}
+
+.hasPreview {
+    padding: 1rem;
+}
+
+.placeholder {
+    pointer-events: none;
+}
+
+.icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.text {
+    margin: 0;
+    color: #ff8fab;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.subtext {
+    font-size: 0.9rem;
+    color: #c9a7b3;
+    font-weight: 400;
+}
+
+.input {
+    display: none;
+}
+
+.previewWrapper {
+    position: relative;
+}
+
+.preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.removeBtn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #ff6b8a;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.removeBtn:hover {
+    background: #ff5a7d;
+    transform: scale(1.1);
+}
+
+.error {
+    color: #ff6b8a;
+    text-align: center;
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+}
+
+.submitBtn {
+    width: 100%;
+    margin-top: 1.5rem;
+}

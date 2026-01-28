@@ -1,0 +1,86 @@
+.page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 5vw 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.main {
+    position: relative;
+}
+
+.floatingHearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floatingHeart {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    animation: float 8s ease-in-out infinite;
+    animation-delay: var(--delay);
+}
+
+.floatingHeart:nth-child(1) {
+    left: 5%;
+    top: 20%;
+}
+
+.floatingHeart:nth-child(2) {
+    left: 15%;
+    top: 60%;
+}
+
+.floatingHeart:nth-child(3) {
+    left: 80%;
+    top: 15%;
+}
+
+.floatingHeart:nth-child(4) {
+    left: 85%;
+    top: 70%;
+}
+
+.floatingHeart:nth-child(5) {
+    left: 50%;
+    top: 10%;
+}
+
+.floatingHeart:nth-child(6) {
+    left: 40%;
+    top: 85%;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+}

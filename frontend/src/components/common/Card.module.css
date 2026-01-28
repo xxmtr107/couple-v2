@@ -1,0 +1,27 @@
+.card {
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.default {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 10px 40px rgba(255, 143, 171, 0.15),
+        0 4px 15px rgba(255, 179, 198, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(255, 143, 171, 0.2);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 50px rgba(255, 143, 171, 0.2),
+        0 8px 20px rgba(255, 179, 198, 0.15);
+}
