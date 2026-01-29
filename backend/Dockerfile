@@ -2,7 +2,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /workspace/app
 
-# Copy Maven wrapper và pom.xml trước để cache dependencies
+# Copy Maven wrapper & config trước để cache dependency
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
@@ -10,26 +10,27 @@ COPY pom.xml .
 # Cho phép execute mvnw
 RUN chmod +x mvnw
 
-# Download dependencies (layer này được cache nếu pom.xml không đổi)
+# Tải dependency trước (được cache nếu pom.xml không đổi)
 RUN ./mvnw dependency:go-offline -B
 
 # Copy source code
 COPY src src
 
-# Build app (skip tests để nhanh hơn)
-RUN ./mvnw package -DskipTests -o
+# Build app (KHÔNG dùng -o)
+RUN ./mvnw package -DskipTests -B
+
 
 # ---------- RUNTIME STAGE ----------
 FROM eclipse-temurin:21-jre-alpine
-VOLUME /tmp
+WORKDIR /app
 
-# Thêm user không phải root để bảo mật hơn
+# Tạo user non-root cho bảo mật
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-ARG JAR_FILE=/workspace/app/target/*.jar
-COPY --from=build ${JAR_FILE} app.jar
+# Copy jar từ build stage
+COPY --from=build /workspace/app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
