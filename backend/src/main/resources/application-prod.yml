@@ -1,16 +1,16 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:mysql://yamabiko.proxy.rlwy.net:34402/railway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:CxxpYuSOCWZehUfyUjiCRSSIgdgLuFkt}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
 
 app:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_SECRET:f9c3a7e2d8b14c6f9e52a1d7c8b4e0a93f6d2c1b8e7a45d9c0f6a2e4b1d8c7a}
     expiration-ms: ${JWT_EXPIRATION:86400000}
   upload:
     dir: ${UPLOAD_DIR:/var/anniversary/uploads}

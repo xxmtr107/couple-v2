@@ -13,7 +13,7 @@ export function useAuth() {
         try {
             const token = await authService.login(username, password);
             authService.setToken(token);
-            navigate('/upload');
+            navigate('/');
         } catch {
             setError('Sai tài khoản hoặc mật khẩu 💔');
         } finally {
