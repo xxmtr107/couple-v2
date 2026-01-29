@@ -15,7 +15,7 @@ app:
   upload:
     dir: ${UPLOAD_DIR:/var/anniversary/uploads}
   cors:
-    allowed-origins: ${CORS_ORIGINS}
+    allowed-origins: ${CORS_ORIGINS:https://couple-v2.vercel.app}
 
 logging:
   level:
