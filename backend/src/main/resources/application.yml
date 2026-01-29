@@ -2,9 +2,9 @@ spring:
   application:
     name: anniversary-backend
   datasource:
-    url: jdbc:mysql://localhost:3307/anniversary_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://yamabiko.proxy.rlwy.net:34402/railway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    password: ${DB_PASSWORD:CxxpYuSOCWZehUfyUjiCRSSIgdgLuFkt}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
