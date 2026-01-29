@@ -44,6 +44,17 @@
     font-size: 1rem;
 }
 
+.timelineMonth {
+    color: #d72660;
+    font-size: 1.4rem;
+    margin: 24px 0 12px 0;
+    font-weight: 600;
+}
+
+.timelineGroup {
+    margin-bottom: 32px;
+}
+
 @media (max-width: 600px) {
     .grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

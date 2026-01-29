@@ -5,6 +5,9 @@ import { mediaService } from '../services/mediaService';
 export function useMedia(initialFilter: MediaType | 'ALL' = 'ALL') {
     const [media, setMedia] = useState<Media[]>([]);
     const [filter, setFilter] = useState<MediaType | 'ALL'>(initialFilter);
+    const [caption, setCaption] = useState('');
+    const [tag, setTag] = useState('');
+    const [date, setDate] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -26,6 +29,14 @@ export function useMedia(initialFilter: MediaType | 'ALL' = 'ALL') {
         loadMedia();
     }, [loadMedia]);
 
+    // Filter client-side
+    const filteredMedia = media.filter(m => {
+        if (caption && !(m.caption || '').toLowerCase().includes(caption.toLowerCase())) return false;
+        if (tag && !(m.tags || []).some(t => t.toLowerCase().includes(tag.toLowerCase()))) return false;
+        if (date && !(m.mediaDate || m.createdAt || '').startsWith(date)) return false;
+        return true;
+    });
+
     const deleteMedia = useCallback(async (id: number) => {
         try {
             await mediaService.delete(id);
@@ -40,9 +51,15 @@ export function useMedia(initialFilter: MediaType | 'ALL' = 'ALL') {
     }, []);
 
     return {
-        media,
+        media: filteredMedia,
         filter,
         setFilter,
+        caption,
+        setCaption,
+        tag,
+        setTag,
+        date,
+        setDate,
         loading,
         error,
         deleteMedia,
