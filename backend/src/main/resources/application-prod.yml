@@ -17,6 +17,11 @@ app:
   cors:
     allowed-origins: ${CORS_ORIGINS:https://couple-v2.vercel.app,http://localhost:5173}
 
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dltnty3yk}
+  api-key: ${CLOUDINARY_API_KEY:624713413356278}
+  api-secret: ${CLOUDINARY_API_SECRET:Kz2OzrfD9MDccqp5dlul1UYXGoc}
+
 logging:
   level:
     root: WARN

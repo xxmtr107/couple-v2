@@ -62,7 +62,34 @@
 }
 
 .input {
-    display: none;
+    display: block;
+    margin: 8px auto 8px auto;
+    width: 90%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #ffd6e0;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.previewList {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 8px;
+}
+
+.previewItem {
+    position: relative;
+    background: #fff0f6;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px #ffe0ec;
+    padding: 18px 12px 12px 12px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 }
 
 .previewWrapper {

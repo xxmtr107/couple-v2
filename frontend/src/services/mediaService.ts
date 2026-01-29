@@ -27,9 +27,7 @@ export const mediaService = {
         return [];
     },
 
-    async upload(file: File): Promise<Media> {
-        const formData = new FormData();
-        formData.append('file', file);
+    async upload(formData: FormData): Promise<Media> {
         const response = await api.post<ApiResponse<Media> | Media>('/media/upload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });

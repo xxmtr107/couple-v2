@@ -32,6 +32,21 @@ public class User {
     @Builder.Default
     private String role = "USER";
 
+    @Column(name = "email", unique = true)
+    private String email;
+
+    @Column(name = "display_name")
+    private String displayName;
+
+    @Column(name = "birthday")
+    private Instant birthday;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(name = "couple_id")
+    private Long coupleId;
+
     @Column(name = "created_at")
     private Instant createdAt;
 

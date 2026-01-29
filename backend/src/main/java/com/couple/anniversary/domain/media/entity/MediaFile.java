@@ -40,6 +40,18 @@ public class MediaFile {
     @Column(nullable = false)
     private String type; // PHOTO or VIDEO
 
+    @Column(length = 1000)
+    private String caption;
+
+    @Column(name = "tags")
+    private String tags; // comma-separated tags
+
+    @Column(name = "media_date")
+    private Instant mediaDate; // ngày chụp/quay, cho phép chỉnh tay
+
+    @Column(name = "couple_id")
+    private Long coupleId;
+
     @JsonIgnore
     @Column(nullable = false)
     private String path;

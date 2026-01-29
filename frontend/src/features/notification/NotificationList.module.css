@@ -1,0 +1,46 @@
+.container {
+    max-width: 420px;
+    margin: 40px auto;
+    background: #f6f6ff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px #d1c4e9;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.title {
+    font-size: 2rem;
+    color: #7c4dff;
+    margin-bottom: 12px;
+}
+
+.list {
+    margin-top: 24px;
+    text-align: left;
+}
+
+.item {
+    background: #ede7f6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+.read {
+    opacity: 0.6;
+    font-weight: 400;
+}
+
+.markBtn {
+    background: #7c4dff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 12px;
+    margin-left: 8px;
+    cursor: pointer;
+}

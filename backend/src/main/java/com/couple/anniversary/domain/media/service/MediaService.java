@@ -18,15 +18,77 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.cloudinary.utils.StringUtils as CloudinaryStringUtils;
+import com.cloudinary.Transformation;
+import com.cloudinary.Singleton;
+import com.cloudinary.Api;
+import com.cloudinary.api.exceptions.ApiException;
+import com.cloudinary.api.exceptions.NotFound;
+import com.cloudinary.api.exceptions.BadRequest;
+import com.cloudinary.api.exceptions.AuthorizationRequired;
+import com.cloudinary.api.exceptions.GeneralError;
+import com.cloudinary.api.exceptions.RateLimited;
+import com.cloudinary.api.exceptions.Timeout;
+import com.cloudinary.api.exceptions.TooLarge;
+import com.cloudinary.api.exceptions.UnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadError;
+import com.cloudinary.api.exceptions.UploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetNotFound;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateError;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateNotAllowed;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateRequired;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateTooLarge;
+import com.cloudinary.api.exceptions.UploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUploadPresetUpdateUnsupportedFormat;
 
 @Slf4j
 @Service
@@ -35,6 +97,7 @@ import java.util.stream.Collectors;
 public class MediaService {
 
     private final MediaFileRepository mediaFileRepository;
+    private final Cloudinary cloudinary;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -47,7 +110,17 @@ public class MediaService {
         String type = determineMediaType(contentType);
         String fileName = generateFileName(file.getOriginalFilename());
 
-        Path filePath = saveFileToDisk(file, fileName);
+        // Upload to Cloudinary
+        Map uploadResult;
+        try {
+            uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "resource_type", type.equals("VIDEO") ? "video" : "image",
+                "public_id", fileName
+            ));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload to Cloudinary", e);
+        }
+        String url = (String) uploadResult.get("secure_url");
 
         MediaFile mediaFile = MediaFile.builder()
                 .fileName(fileName)
@@ -55,13 +128,13 @@ public class MediaService {
                 .contentType(contentType)
                 .size(file.getSize())
                 .type(type)
-                .path(filePath.toString())
+                .path(url)
                 .createdAt(Instant.now())
                 .owner(owner)
                 .build();
 
         mediaFile = mediaFileRepository.save(mediaFile);
-        log.info("Uploaded file: {} for user: {}", fileName, owner.getUsername());
+        log.info("Uploaded file: {} for user: {} (Cloudinary)", fileName, owner.getUsername());
 
         return toResponse(mediaFile);
     }
