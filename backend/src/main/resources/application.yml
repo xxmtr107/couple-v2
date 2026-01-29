@@ -34,6 +34,11 @@ app:
   swagger:
     server-url: ${SWAGGER_SERVER_URL:https://couple-v2.onrender.com}
 
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dltnty3yk}
+  api-key: ${CLOUDINARY_API_KEY:624713413356278}
+  api-secret: ${CLOUDINARY_API_SECRET:Kz2OzrfD9MDccqp5dlul1UYXGoc}
+
 # Swagger / OpenAPI Configuration
 springdoc:
   api-docs:
