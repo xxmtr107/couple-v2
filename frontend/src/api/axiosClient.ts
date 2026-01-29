@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://couple-v2.onrender.com/api';
+
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: API_BASE_URL,
 });
 
 axiosClient.interceptors.request.use((config) => {

@@ -1,6 +1,6 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-export const UPLOADS_URL = import.meta.env.VITE_UPLOADS_URL || 'http://localhost:8080/uploads';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://couple-v2.onrender.com/api';
+export const UPLOADS_URL = import.meta.env.VITE_UPLOADS_URL || 'https://couple-v2.onrender.com/uploads';
 
 // App Configuration
 export const APP_NAME = 'Our Love Story';
