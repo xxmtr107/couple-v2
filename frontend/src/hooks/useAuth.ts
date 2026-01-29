@@ -13,7 +13,7 @@ export function useAuth() {
         try {
             const token = await authService.login(username, password);
             authService.setToken(token);
-            navigate('/');
+            navigate('/upload');
         } catch {
             setError('Sai tài khoản hoặc mật khẩu 💔');
         } finally {
@@ -25,10 +25,15 @@ export function useAuth() {
         setLoading(true);
         setError('');
         try {
-            await authService.register(username, password);
+            const authData = await authService.register(username, password);
+            // Tự động lưu token nếu có
+            if (authData?.token) {
+                authService.setToken(authData.token);
+            }
             return true;
-        } catch {
-            setError('Username đã tồn tại rồi babe 😢');
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Username đã tồn tại rồi babe 😢';
+            setError(errorMessage);
             return false;
         } finally {
             setLoading(false);

@@ -1,30 +1,47 @@
 import api from './api';
 import { STORAGE_KEYS } from '../config/constants';
 
-interface LoginResponse {
-    token?: string;
-    accessToken?: string;
-    access_token?: string;
+// API Response wrapper format
+interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+    timestamp: string;
+}
+
+interface AuthData {
+    token: string;
+    username: string;
+    role: string;
 }
 
 export const authService = {
     async login(username: string, password: string): Promise<string> {
-        const response = await api.post<LoginResponse>('/auth/login', { username, password });
+        const response = await api.post<ApiResponse<AuthData>>('/auth/login', { username, password });
         console.log('Full response:', response);
         console.log('Response data:', response.data);
-        const data = response.data;
-        // Handle different token field names from backend
-        const token = data.token || data.accessToken || data.access_token;
+
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Login failed');
+        }
+
+        const token = response.data.data?.token;
         console.log('Extracted token:', token);
         if (!token) {
-            console.error('Login response:', data);
+            console.error('Login response:', response.data);
             throw new Error('Token not found in response');
         }
         return token;
     },
 
-    async register(username: string, password: string): Promise<void> {
-        await api.post('/auth/register', { username, password });
+    async register(username: string, password: string): Promise<AuthData> {
+        const response = await api.post<ApiResponse<AuthData>>('/auth/register', { username, password });
+
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Registration failed');
+        }
+
+        return response.data.data;
     },
 
     logout(): void {
