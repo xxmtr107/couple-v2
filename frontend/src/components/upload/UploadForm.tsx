@@ -104,7 +104,9 @@ export const UploadForm: React.FC = () => {
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
-                    onClick={() => inputRef.current?.click()}
+                    onClick={() => {
+                        if (items.length === 0) inputRef.current?.click();
+                    }}
                 >
                     {items.length === 0 ? (
                         <div className={styles.placeholder}>

@@ -16,7 +16,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
     onDownload,
     onDelete,
 }) => {
-    const mediaUrl = mediaService.getMediaUrl(media.fileName);
+    const mediaUrl = media.downloadUrl || mediaService.getMediaUrl(media.fileName);
 
     return (
         <Card className={styles.card}>
@@ -44,6 +44,21 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                 <span className={styles.name} title={media.originalName}>
                     {media.originalName}
                 </span>
+                {media.caption && (
+                    <div className={styles.caption} title={media.caption}>
+                        <b>Caption:</b> {media.caption}
+                    </div>
+                )}
+                {media.tags && media.tags.length > 0 && (
+                    <div className={styles.tags} title={media.tags.join(', ')}>
+                        <b>Tag:</b> {media.tags.join(', ')}
+                    </div>
+                )}
+                {(media.mediaDate || media.createdAt) && (
+                    <div className={styles.date}>
+                        <b>Ngày:</b> {media.mediaDate ? media.mediaDate : (media.createdAt ? media.createdAt.slice(0, 10) : '')}
+                    </div>
+                )}
                 <div className={styles.actions}>
                     <Button
                         variant="secondary"

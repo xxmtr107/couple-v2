@@ -17,14 +17,17 @@ export const mediaService = {
 
         // Handle cả 2 format: wrapper hoặc direct array
         const data = response.data;
+        let list: Media[] = [];
         if (Array.isArray(data)) {
-            return data;
+            list = data;
+        } else if (data && 'data' in data && Array.isArray(data.data)) {
+            list = data.data;
         }
-        // Nếu là wrapper format
-        if (data && 'data' in data && Array.isArray(data.data)) {
-            return data.data;
-        }
-        return [];
+        // Map downloadUrl nếu có, fallback sang getMediaUrl
+        return list.map((m) => ({
+            ...m,
+            downloadUrl: m.downloadUrl || (m.fileName ? mediaService.getMediaUrl(m.fileName) : undefined),
+        }));
     },
 
     async upload(formData: FormData): Promise<Media> {
@@ -34,7 +37,7 @@ export const mediaService = {
 
         const data = response.data;
         // Handle wrapper format
-        if (data && 'data' in data && !('id' in data)) {
+        if (data && 'data' in data) {
             return (data as ApiResponse<Media>).data;
         }
         return data as Media;

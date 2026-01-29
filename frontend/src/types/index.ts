@@ -33,12 +33,14 @@ export interface Media {
     type: MediaType;
     originalName: string;
     contentType: string;
+    size?: number;
     createdAt?: string;
     caption?: string;
     tags?: string[];
     mediaDate?: string;
     coupleId?: number;
     url?: string;
+    downloadUrl?: string;
 }
 
 export interface CoupleSettings {
