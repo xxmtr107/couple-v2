@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+import { userService, UserProfile } from '../../services/userService';
 import styles from './PageLayout.module.css';
 
 interface PageLayoutProps {
@@ -14,6 +15,22 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     showNavbar = true,
     showFooter = true
 }) => {
+    const [user, setUser] = useState<UserProfile | null>(null);
+
+    useEffect(() => {
+        userService.getMe()
+            .then(setUser)
+            .catch(() => {
+                // Fallback to localStorage
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    try {
+                        setUser(JSON.parse(savedUser));
+                    } catch { }
+                }
+            });
+    }, []);
+
     return (
         <div className={styles.page}>
             {/* Floating Hearts Background */}
@@ -26,7 +43,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
             </div>
 
             {/* Navbar */}
-            {showNavbar && <Navbar />}
+            {showNavbar && <Navbar userAvatar={user?.avatarUrl} userName={user?.displayName || user?.username} />}
 
             {/* Main Content */}
             <main className={styles.main}>{children}</main>

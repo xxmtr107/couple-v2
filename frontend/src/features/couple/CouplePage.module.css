@@ -381,10 +381,47 @@
     background: #fff;
     border-radius: 24px;
     padding: 50px 40px;
-    max-width: 400px;
+    max-width: 450px;
     margin: 0 auto;
     box-shadow: 0 8px 40px rgba(232, 74, 127, 0.15);
     text-align: center;
+}
+
+/* Couple Avatars */
+.coupleAvatars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.avatarWrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffd6e0 0%, #ffb3c6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(232, 74, 127, 0.25);
+    border: 3px solid #fff;
+}
+
+.coupleAvatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatarPlaceholder {
+    font-size: 2rem;
+}
+
+.heartBetween {
+    font-size: 1.8rem;
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .successIcon {

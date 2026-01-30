@@ -129,11 +129,28 @@ export const CouplePage: React.FC = () => {
             <PageLayout>
                 <div className={styles.container}>
                     <div className={styles.connectedCard}>
-                        <span className={styles.successIcon}>💑</span>
+                        {/* Avatar của 2 người */}
+                        <div className={styles.coupleAvatars}>
+                            <div className={styles.avatarWrapper}>
+                                {couple.user1.avatarUrl ? (
+                                    <img src={couple.user1.avatarUrl} alt={couple.user1.displayName || couple.user1.username} className={styles.coupleAvatar} />
+                                ) : (
+                                    <span className={styles.avatarPlaceholder}>👤</span>
+                                )}
+                            </div>
+                            <span className={styles.heartBetween}>💕</span>
+                            <div className={styles.avatarWrapper}>
+                                {couple.user2.avatarUrl ? (
+                                    <img src={couple.user2.avatarUrl} alt={couple.user2.displayName || couple.user2.username} className={styles.coupleAvatar} />
+                                ) : (
+                                    <span className={styles.avatarPlaceholder}>👤</span>
+                                )}
+                            </div>
+                        </div>
                         <h2>Đã kết nối!</h2>
                         <p className={styles.coupleNames}>
                             {couple.user1.displayName || couple.user1.username}
-                            {' '} 💕 {' '}
+                            {' '} & {' '}
                             {couple.user2.displayName || couple.user2.username}
                         </p>
                         <div className={styles.daysCounter}>
