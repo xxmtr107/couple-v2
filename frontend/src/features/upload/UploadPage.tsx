@@ -1,15 +1,18 @@
 import React from 'react';
 import { PageLayout, UploadForm } from '../../components';
+import { useTranslation } from '../../config/i18n';
 import styles from './UploadPage.module.css';
 
 const UploadPage: React.FC = () => {
+    const { t } = useTranslation();
+
     return (
         <PageLayout>
             <div className={styles.container}>
                 <div className={styles.intro}>
-                    <h2 className={styles.title}>Thêm kỷ niệm mới 📸</h2>
+                    <h2 className={styles.title}>{t('uploadTitle')} 📸</h2>
                     <p className={styles.subtitle}>
-                        Lưu giữ những khoảnh khắc đẹp của chúng mình
+                        {t('momentsOfLove')}
                     </p>
                 </div>
 

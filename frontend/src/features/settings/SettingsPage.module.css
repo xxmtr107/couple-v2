@@ -14,6 +14,45 @@
     text-align: center;
 }
 
+/* Setting Row */
+.settingRow {
+    margin-bottom: 20px;
+}
+
+/* Language Toggle */
+.langToggle {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.langBtn {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    background: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.langBtn:hover {
+    border-color: #ffd6e0;
+    background: #fff5f7;
+}
+
+.langActive {
+    border-color: #e84a7f;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%);
+    color: #e84a7f;
+    font-weight: 600;
+}
+
 .label {
     display: block;
     margin: 18px 0 8px;

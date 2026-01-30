@@ -3,6 +3,7 @@ import { Card } from '../common/Card';
 import { Button } from '../common/Button';
 import { mediaService } from '../../services/mediaService';
 import { MAX_FILE_SIZE } from '../../config/constants';
+import { useTranslation } from '../../config/i18n';
 import styles from './UploadForm.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ interface UploadItem {
 }
 
 export const UploadForm: React.FC = () => {
+    const { t } = useTranslation();
     const [items, setItems] = useState<UploadItem[]>([]);
     const [error, setError] = useState('');
     const [uploading, setUploading] = useState(false);
@@ -32,7 +34,7 @@ export const UploadForm: React.FC = () => {
 
         for (const file of Array.from(fileList)) {
             if (file.size > MAX_FILE_SIZE) {
-                setError('File quá lớn (tối đa 100MB) 💔');
+                setError(t('uploadFailed'));
                 continue;
             }
 
@@ -60,7 +62,7 @@ export const UploadForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (items.length === 0) {
-            setError('Chọn ảnh/video đi bé ơi 😭');
+            setError(t('selectFile'));
             return;
         }
 
@@ -79,7 +81,7 @@ export const UploadForm: React.FC = () => {
 
             navigate('/');
         } catch {
-            setError('Upload thất bại 😢 thử lại nhé!');
+            setError(t('uploadFailed'));
         } finally {
             setUploading(false);
         }
@@ -109,7 +111,7 @@ export const UploadForm: React.FC = () => {
                         <div className={styles.placeholder}>
                             <span>📸</span>
                             <p>
-                                Chạm để chọn ảnh/video<br />
+                                {t('selectFile')}<br />
                                 <small>Hỗ trợ mobile & PC</small>
                             </p>
                         </div>
@@ -179,7 +181,7 @@ export const UploadForm: React.FC = () => {
                     loading={uploading}
                     className={styles.submitBtn}
                 >
-                    {uploading ? 'Đang upload...' : '💖 Lưu kỷ niệm'}
+                    {uploading ? t('uploading') : `💖 ${t('save')}`}
                 </Button>
             </form>
         </Card>

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout, Button, Input } from '../../components';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from '../../config/i18n';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage: React.FC = () => {
+    const { t } = useTranslation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,14 +44,14 @@ const RegisterPage: React.FC = () => {
                 {success && <p className={styles.success}>{success}</p>}
 
                 <Input
-                    placeholder="Tên đăng nhập"
+                    placeholder={t('username')}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     icon="👤"
                 />
 
                 <Input
-                    placeholder="Mật khẩu"
+                    placeholder={t('password')}
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -57,7 +59,7 @@ const RegisterPage: React.FC = () => {
                 />
 
                 <Input
-                    placeholder="Xác nhận mật khẩu"
+                    placeholder={t('confirmPassword')}
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -71,13 +73,13 @@ const RegisterPage: React.FC = () => {
                     loading={loading}
                     className={styles.submitBtn}
                 >
-                    Đăng ký 💕
+                    {t('register')} 💕
                 </Button>
 
                 <p className={styles.link}>
-                    Đã có tài khoản? {' '}
+                    {t('hasAccount')} {' '}
                     <Link to="/login" className={styles.linkText}>
-                        Đăng nhập ngay
+                        {t('login')}
                     </Link>
                 </p>
             </form>

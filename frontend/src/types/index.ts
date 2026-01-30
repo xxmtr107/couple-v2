@@ -13,10 +13,20 @@ export interface User {
 
 export interface Couple {
     id: number;
-    user1: User;
-    user2: User;
+    user1Id: number;
+    user1DisplayName?: string;
+    user1Avatar?: string;
+    user2Id: number;
+    user2DisplayName?: string;
+    user2Avatar?: string;
+    anniversaryDate?: string;
+    daysTogether?: number;
+    status?: 'ACTIVE' | 'INACTIVE';
     createdAt: string;
     settings?: CoupleSettings;
+    // Legacy fields for backward compatibility
+    user1?: User;
+    user2?: User;
 }
 
 export interface CoupleRequest {
@@ -44,8 +54,8 @@ export interface Media {
 }
 
 export interface CoupleSettings {
-    id: number;
-    coupleId: number;
+    id?: number;
+    coupleId?: number;
     theme?: string;
     font?: string;
     background?: string;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import { coupleService } from '../../services/coupleService';
+import { useTranslation } from '../../config/i18n';
 import styles from './Navbar.module.css';
 
 interface NavbarProps {
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ userAvatar, userName }) => {
     const location = useLocation();
+    const { t } = useTranslation();
     const [daysTogether, setDaysTogether] = useState<number | null>(null);
 
     useEffect(() => {
@@ -40,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userAvatar, userName }) => {
                 {daysTogether !== null && (
                     <div className={styles.daysBadge}>
                         <span className={styles.daysNumber}>{daysTogether}</span>
-                        <span className={styles.daysLabel}>days together</span>
+                        <span className={styles.daysLabel}>{t('daysTogether')}</span>
                     </div>
                 )}
 
@@ -50,19 +52,19 @@ export const Navbar: React.FC<NavbarProps> = ({ userAvatar, userName }) => {
                         to="/"
                         className={`${styles.navLink} ${isActive('/') ? styles.active : ''}`}
                     >
-                        Our Story
+                        {t('ourStory')}
                     </Link>
                     <Link
                         to="/timeline"
                         className={`${styles.navLink} ${isActive('/timeline') ? styles.active : ''}`}
                     >
-                        Timeline
+                        {t('timeline')}
                     </Link>
                     <Link
                         to="/couple"
                         className={`${styles.navLink} ${isActive('/couple') ? styles.active : ''}`}
                     >
-                        Couple
+                        {t('couple')}
                     </Link>
                 </div>
 
@@ -81,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userAvatar, userName }) => {
                         className={styles.signOutBtn}
                         onClick={() => authService.logout()}
                     >
-                        Sign Out
+                        {t('signOut')}
                     </button>
                 </div>
             </div>

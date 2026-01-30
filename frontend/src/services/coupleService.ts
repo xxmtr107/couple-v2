@@ -13,11 +13,23 @@ export const coupleService = {
     // GET / - Lấy thông tin couple hiện tại (bao gồm daysTogether)
     async getMyCouple(): Promise<Couple | null> {
         try {
+            // Try different possible endpoints
             const res = await api.get<ApiResponse<Couple> | Couple>('/couple');
+            console.log('Raw couple API response:', res.data);
             const data = res.data;
-            if (data && 'data' in data) return data.data;
-            return data as Couple;
-        } catch {
+
+            // Handle various response formats
+            if (data && typeof data === 'object') {
+                if ('data' in data && data.data) {
+                    return data.data;
+                }
+                if ('id' in data) {
+                    return data as Couple;
+                }
+            }
+            return null;
+        } catch (err) {
+            console.error('getMyCouple error:', err);
             return null;
         }
     },

@@ -39,10 +39,15 @@ public class MediaService {
 
     /**
      * Tải file lên Cloudinary và lưu thông tin vào Database
+     * Media sẽ được lưu theo coupleId để cả 2 người trong couple cùng xem được
      */
     @Transactional
     public MediaFileResponse uploadFile(MultipartFile file, User owner) {
         validateFile(file);
+
+        if (owner.getCoupleId() == null) {
+            throw new BadRequestException("Bạn cần ghép đôi trước khi upload media!");
+        }
 
         try {
             String contentType = file.getContentType();
@@ -57,7 +62,7 @@ public class MediaService {
             String url = (String) uploadResult.get("secure_url");
             String publicId = (String) uploadResult.get("public_id");
 
-            // 2. Lưu thông tin vào DB
+            // 2. Lưu thông tin vào DB - lưu coupleId để share giữa 2 người
             MediaFile mediaFile = MediaFile.builder()
                     .fileName(publicId) // Lưu publicId để sau này còn tìm mà xóa bé nhé
                     .originalName(StringUtils.cleanPath(file.getOriginalFilename()))
@@ -66,28 +71,40 @@ public class MediaService {
                     .type(type)
                     .path(url)
                     .createdAt(Instant.now())
+                    .mediaDate(Instant.now()) // Mặc định là ngày upload
                     .owner(owner)
+                    .coupleId(owner.getCoupleId()) // Gán coupleId để share album
                     .build();
 
             mediaFile = mediaFileRepository.save(mediaFile);
-            log.info("Bé ơi, đã upload thành công file: {} cho user: {}", publicId, owner.getUsername());
+            log.info("Đã upload thành công file: {} cho couple: {}", publicId, owner.getCoupleId());
 
             return toResponse(mediaFile);
         } catch (IOException e) {
             log.error("Lỗi upload Cloudinary: ", e);
-            throw new RuntimeException("Tiểu muội ơi, hệ thống không tải file lên được rồi!");
+            throw new RuntimeException("Hệ thống không tải file lên được!");
         }
     }
 
+    /**
+     * Lấy tất cả media của couple (shared album)
+     */
     public List<MediaFileResponse> getMediaFiles(User owner, String type) {
-        List<MediaFile> files;
-        if (type == null || type.equalsIgnoreCase(AppConstants.MEDIA_TYPE_ALL)) {
-            files = mediaFileRepository.findByOwnerOrderByCreatedAtDesc(owner);
-        } else {
-            files = mediaFileRepository.findByOwnerAndTypeOrderByCreatedAtDesc(owner, type.toUpperCase());
+        if (owner.getCoupleId() == null) {
+            return List.of();
         }
 
-        return files.stream()
+        // Query theo coupleId thay vì owner để lấy media của cả 2 người
+        Page<MediaFile> mediaPage;
+        Pageable pageable = PageRequest.of(0, 1000); // Lấy tất cả
+        if (type == null || type.equalsIgnoreCase(AppConstants.MEDIA_TYPE_ALL)) {
+            mediaPage = mediaFileRepository.findByCoupleIdOrderByMediaDateDesc(owner.getCoupleId(), pageable);
+        } else {
+            mediaPage = mediaFileRepository.findByCoupleIdAndTypeOrderByMediaDateDesc(owner.getCoupleId(),
+                    type.toUpperCase(), pageable);
+        }
+
+        return mediaPage.getContent().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
@@ -110,13 +127,15 @@ public class MediaService {
 
     /**
      * Xóa file trên Cloudinary và trong Database
+     * Cả 2 người trong couple đều có quyền xóa media của couple
      */
     @Transactional
     public void deleteFile(Long id, User owner) {
         MediaFile mediaFile = getMediaFile(id);
 
-        if (!mediaFile.getOwner().getId().equals(owner.getId())) {
-            throw new ForbiddenException("Bé không có quyền xóa file này đâu nhen!");
+        // Kiểm tra user có thuộc couple sở hữu media này không
+        if (owner.getCoupleId() == null || !owner.getCoupleId().equals(mediaFile.getCoupleId())) {
+            throw new ForbiddenException("Bạn không có quyền xóa file này!");
         }
 
         try {
@@ -128,10 +147,10 @@ public class MediaService {
 
             // Xóa trong DB
             mediaFileRepository.delete(mediaFile);
-            log.info("Đã xóa file: {} xong rồi nhé bé!", mediaFile.getFileName());
+            log.info("Đã xóa file: {}", mediaFile.getFileName());
         } catch (IOException ex) {
             log.error("Lỗi khi xóa file trên Cloudinary", ex);
-            throw new RuntimeException("Huhu, không xóa được file trên Cloudinary rồi bé ơi");
+            throw new RuntimeException("Không xóa được file!");
         }
     }
 

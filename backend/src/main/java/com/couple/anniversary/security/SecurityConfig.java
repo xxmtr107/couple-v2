@@ -32,6 +32,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CoupleRequiredFilter coupleRequiredFilter;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Value("${app.cors.allowed-origins:http://localhost:5173}")
@@ -58,7 +59,8 @@ public class SecurityConfig {
                         .requestMatchers("/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(coupleRequiredFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }

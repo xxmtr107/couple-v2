@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Media } from '../../types';
 import { mediaService } from '../../services/mediaService';
+import { useTranslation, getCurrentLanguage } from '../../config/i18n';
 import styles from './OnThisDay.module.css';
 
 interface OnThisDayProps {
@@ -8,6 +9,7 @@ interface OnThisDayProps {
 }
 
 export const OnThisDay: React.FC<OnThisDayProps> = ({ onMediaClick }) => {
+    const { t } = useTranslation();
     const [memories, setMemories] = useState<Media[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,7 +37,7 @@ export const OnThisDay: React.FC<OnThisDayProps> = ({ onMediaClick }) => {
             <div className={styles.container}>
                 <div className={styles.loading}>
                     <span className={styles.loadingIcon}>✨</span>
-                    <p>Đang tìm kỷ niệm...</p>
+                    <p>{t('loading')}</p>
                 </div>
             </div>
         );
@@ -46,7 +48,8 @@ export const OnThisDay: React.FC<OnThisDayProps> = ({ onMediaClick }) => {
     }
 
     const today = new Date();
-    const formattedDate = today.toLocaleDateString('vi-VN', {
+    const lang = getCurrentLanguage();
+    const formattedDate = today.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
         day: 'numeric',
         month: 'long'
     });
@@ -56,7 +59,7 @@ export const OnThisDay: React.FC<OnThisDayProps> = ({ onMediaClick }) => {
             <div className={styles.header}>
                 <span className={styles.icon}>📅</span>
                 <div className={styles.headerText}>
-                    <h3 className={styles.title}>Ngày này năm xưa</h3>
+                    <h3 className={styles.title}>{t('onThisDay')}</h3>
                     <p className={styles.date}>{formattedDate}</p>
                 </div>
             </div>

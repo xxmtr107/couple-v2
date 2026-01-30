@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout, Button, Input } from '../../components';
 import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from '../../config/i18n';
 import styles from './LoginPage.module.css';
 
 const LoginPage: React.FC = () => {
+    const { t } = useTranslation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login, loading, error } = useAuth();
@@ -24,14 +26,14 @@ const LoginPage: React.FC = () => {
                 {error && <p className={styles.error}>{error}</p>}
 
                 <Input
-                    placeholder="Tên đăng nhập"
+                    placeholder={t('username')}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     icon="👤"
                 />
 
                 <Input
-                    placeholder="Mật khẩu"
+                    placeholder={t('password')}
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -45,13 +47,13 @@ const LoginPage: React.FC = () => {
                     loading={loading}
                     className={styles.submitBtn}
                 >
-                    Đăng nhập 💖
+                    {t('login')} 💖
                 </Button>
 
                 <p className={styles.link}>
-                    Chưa có tài khoản? {' '}
+                    {t('noAccount')} {' '}
                     <Link to="/register" className={styles.linkText}>
-                        Đăng ký ngay
+                        {t('register')}
                     </Link>
                 </p>
             </form>

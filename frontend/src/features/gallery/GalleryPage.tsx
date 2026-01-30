@@ -5,6 +5,7 @@ import { YearTimeline } from '../../components/media/YearTimeline';
 import { AlbumDetail } from '../../components/media/AlbumDetail';
 import { OnThisDay } from '../../components/media/OnThisDay';
 import { useMedia } from '../../hooks/useMedia';
+import { useTranslation } from '../../config/i18n';
 import styles from './GalleryPage.module.css';
 
 interface SelectedAlbum {
@@ -13,6 +14,7 @@ interface SelectedAlbum {
 }
 
 const GalleryPage: React.FC = () => {
+    const { t } = useTranslation();
     const { media, deleteMedia, downloadMedia, loading } = useMedia();
     const [selectedAlbum, setSelectedAlbum] = useState<SelectedAlbum | null>(null);
     const navigate = useNavigate();
@@ -41,7 +43,7 @@ const GalleryPage: React.FC = () => {
                 {loading ? (
                     <div className={styles.loading}>
                         <span className={styles.loadingIcon}>💝</span>
-                        <p>Đang tải kỷ niệm...</p>
+                        <p>{t('loading')}</p>
                     </div>
                 ) : selectedAlbum ? (
                     <AlbumDetail
@@ -68,7 +70,7 @@ const GalleryPage: React.FC = () => {
                                 className={styles.uploadButton}
                                 onClick={() => navigate('/upload')}
                             >
-                                📸 Upload New Photos
+                                {t('uploadNewPhotos')}
                             </button>
                         </div>
                     </>

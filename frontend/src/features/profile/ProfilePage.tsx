@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService, UserProfile } from '../../services/userService';
+import { useTranslation } from '../../config/i18n';
 import styles from './ProfilePage.module.css';
 
 export const ProfilePage: React.FC = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,9 +126,9 @@ export const ProfilePage: React.FC = () => {
             // Also update localStorage for fallback
             localStorage.setItem('user', JSON.stringify(profile));
 
-            setMessage('Đã lưu thông tin! 💕');
+            setMessage(t('saved'));
         } catch {
-            setMessage('Lưu thất bại, thử lại nhé!');
+            setMessage(t('saveFailed'));
         } finally {
             setLoading(false);
             setTimeout(() => setMessage(''), 3000);
@@ -138,7 +140,7 @@ export const ProfilePage: React.FC = () => {
             <div className={styles.container}>
                 <div className={styles.loading}>
                     <span>💕</span>
-                    <p>Đang tải...</p>
+                    <p>{t('loading')}</p>
                 </div>
             </div>
         );
@@ -170,15 +172,15 @@ export const ProfilePage: React.FC = () => {
                         onChange={handleFileChange}
                         className={styles.hiddenInput}
                     />
-                    <p className={styles.avatarHint}>Click để thay đổi avatar</p>
+                    <p className={styles.avatarHint}>{t('changeAvatar')}</p>
                 </div>
 
                 {/* Profile Form */}
                 <div className={styles.formSection}>
-                    <h2 className={styles.title}>Thông tin cá nhân</h2>
+                    <h2 className={styles.title}>{t('profileTitle')}</h2>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Username</label>
+                        <label className={styles.label}>{t('username')}</label>
                         <input
                             type="text"
                             name="username"
@@ -191,19 +193,19 @@ export const ProfilePage: React.FC = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Tên hiển thị</label>
+                        <label className={styles.label}>{t('displayName')}</label>
                         <input
                             type="text"
                             name="displayName"
                             value={profile.displayName}
                             onChange={handleChange}
                             className={styles.input}
-                            placeholder="Tên của bạn"
+                            placeholder={t('displayName')}
                         />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Email</label>
+                        <label className={styles.label}>{t('email')}</label>
                         <input
                             type="email"
                             name="email"
@@ -215,7 +217,7 @@ export const ProfilePage: React.FC = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Ngày sinh</label>
+                        <label className={styles.label}>{t('birthday')}</label>
                         <input
                             type="date"
                             name="birthday"
@@ -233,13 +235,13 @@ export const ProfilePage: React.FC = () => {
                             onClick={handleSave}
                             disabled={loading}
                         >
-                            {loading ? 'Đang lưu...' : '💾 Lưu thay đổi'}
+                            {loading ? t('loading') : t('saveChanges')}
                         </button>
                         <button
                             className={styles.backBtn}
                             onClick={() => navigate(-1)}
                         >
-                            ← Quay lại
+                            ← {t('back')}
                         </button>
                     </div>
                 </div>

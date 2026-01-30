@@ -4,9 +4,11 @@ import { coupleService } from '../../services/coupleService';
 import { userService, UserProfile } from '../../services/userService';
 import { Couple, CoupleRequest } from '../../types';
 import { PageLayout } from '../../components';
+import { useTranslation } from '../../config/i18n';
 import styles from './CouplePage.module.css';
 
 export const CouplePage: React.FC = () => {
+    const { t } = useTranslation();
     const [couple, setCouple] = useState<Couple | null>(null);
     const [requests, setRequests] = useState<CoupleRequest[]>([]);
     const [sentRequest, setSentRequest] = useState<CoupleRequest | null>(null);
@@ -38,7 +40,9 @@ export const CouplePage: React.FC = () => {
             try {
                 const coupleData = await coupleService.getMyCouple();
                 setCouple(coupleData);
-            } catch { }
+            } catch (err) {
+                console.error('Failed to load couple:', err);
+            }
 
             // Load pending requests (from others)
             try {
@@ -115,57 +119,82 @@ export const CouplePage: React.FC = () => {
                 <div className={styles.container}>
                     <div className={styles.loading}>
                         <span className={styles.loadingIcon}>💕</span>
-                        <p>Đang tải...</p>
+                        <p>{t('loading')}</p>
                     </div>
                 </div>
             </PageLayout>
         );
     }
 
-    // Kiểm tra couple có valid không (phải có id và user1/user2)
-    const hasValidCouple = couple && couple.id && (couple.user1 || couple.user2);
+    // Kiểm tra couple có valid không (phải có id)
+    const hasValidCouple = couple && couple.id;
 
     // Nếu đã có couple - hiển thị thông tin và nút đến gallery
     if (hasValidCouple) {
-        // Dùng daysTogether từ API nếu có, fallback sang tính local
-        const daysTogether = (couple as any).daysTogether ??
-            (couple.createdAt ? coupleService.getDaysTogether(couple.createdAt) : 0);
+        // Dùng daysTogether từ API
+        const daysTogether = couple.daysTogether ?? 0;
+
+        // Get user info - sử dụng format mới từ backend
+        const user1Name = couple.user1DisplayName || couple.user1?.displayName || 'Bạn';
+        const user1Avatar = couple.user1Avatar || couple.user1?.avatarUrl;
+        const user2Name = couple.user2DisplayName || couple.user2?.displayName || 'Người ấy';
+        const user2Avatar = couple.user2Avatar || couple.user2?.avatarUrl;
 
         return (
             <PageLayout>
                 <div className={styles.container}>
+                    <div className={styles.bgDecor1}></div>
+                    <div className={styles.bgDecor2}></div>
+
                     <div className={styles.connectedCard}>
                         {/* Avatar của 2 người */}
                         <div className={styles.coupleAvatars}>
                             <div className={styles.avatarWrapper}>
-                                {couple.user1?.avatarUrl ? (
-                                    <img src={couple.user1.avatarUrl} alt={couple.user1.displayName || couple.user1.username} className={styles.coupleAvatar} />
+                                {user1Avatar ? (
+                                    <img src={user1Avatar} alt={user1Name} className={styles.coupleAvatar} />
                                 ) : (
-                                    <span className={styles.avatarPlaceholder}>👤</span>
+                                    <div className={styles.avatarPlaceholder}>
+                                        <span>👩</span>
+                                    </div>
                                 )}
+                                <span className={styles.avatarName}>{user1Name}</span>
                             </div>
-                            <span className={styles.heartBetween}>💕</span>
+
+                            <div className={styles.heartBetweenWrapper}>
+                                <span className={styles.heartBetween}>💕</span>
+                                <div className={styles.connectionRing}></div>
+                            </div>
+
                             <div className={styles.avatarWrapper}>
-                                {couple.user2?.avatarUrl ? (
-                                    <img src={couple.user2.avatarUrl} alt={couple.user2.displayName || couple.user2.username} className={styles.coupleAvatar} />
+                                {user2Avatar ? (
+                                    <img src={user2Avatar} alt={user2Name} className={styles.coupleAvatar} />
                                 ) : (
-                                    <span className={styles.avatarPlaceholder}>👤</span>
+                                    <div className={styles.avatarPlaceholder}>
+                                        <span>👨</span>
+                                    </div>
                                 )}
+                                <span className={styles.avatarName}>{user2Name}</span>
                             </div>
                         </div>
-                        <h2>Đã kết nối!</h2>
-                        <p className={styles.coupleNames}>
-                            {couple.user1?.displayName || couple.user1?.username || 'Bạn'}
-                            {' '} & {' '}
-                            {couple.user2?.displayName || couple.user2?.username || 'Người ấy'}
-                        </p>
+
+                        <h2 className={styles.connectedTitle}>{t('connected')}</h2>
+
                         <div className={styles.daysCounter}>
                             <span className={styles.daysNumber}>{daysTogether}</span>
-                            <span className={styles.daysLabel}>ngày bên nhau</span>
+                            <span className={styles.daysLabel}>{t('daysTogetherLabel')}</span>
                         </div>
-                        <button className={styles.primaryBtn} onClick={() => navigate('/')}>
-                            📸 Xem kỷ niệm
-                        </button>
+
+                        <div className={styles.connectedActions}>
+                            <button className={styles.primaryBtn} onClick={() => navigate('/')}>
+                                {t('viewMemories')}
+                            </button>
+                            <button className={styles.secondaryBtn} onClick={() => navigate('/upload')}>
+                                {t('uploadMemory')}
+                            </button>
+                            <button className={styles.tertiaryBtn} onClick={() => navigate('/settings')}>
+                                {t('coupleSettings')}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </PageLayout>
@@ -191,12 +220,12 @@ export const CouplePage: React.FC = () => {
 
                     <div className={styles.waitingCard}>
                         <span className={styles.waitingIcon}>⏳</span>
-                        <h2 className={styles.waitingTitle}>Đang chờ phản hồi...</h2>
+                        <h2 className={styles.waitingTitle}>{t('pendingTitle')}</h2>
                         <p className={styles.waitingText}>
-                            Bạn đã gửi lời mời đến <strong>{sentRequest.toUser?.displayName || sentRequest.toUser?.username || 'người ấy'}</strong>
+                            {t('pendingSent')} <strong>{sentRequest.toUser?.displayName || sentRequest.toUser?.username || 'người ấy'}</strong>
                         </p>
                         <p className={styles.waitingHint}>
-                            Hãy chờ người ấy xác nhận nhé! 💕
+                            {t('pendingWait')}
                         </p>
 
                         <div className={styles.waitingActions}>
@@ -204,10 +233,10 @@ export const CouplePage: React.FC = () => {
                                 className={styles.cancelBtn}
                                 onClick={handleCancelRequest}
                             >
-                                ✕ Hủy lời mời
+                                ✕ {t('cancelInvite')}
                             </button>
                             <p className={styles.cancelHint}>
-                                (Hủy để gửi cho người khác)
+                                {t('cancelHint')}
                             </p>
                         </div>
                     </div>
@@ -215,7 +244,7 @@ export const CouplePage: React.FC = () => {
                     {/* Vẫn hiển thị pending requests từ người khác */}
                     {pendingRequests.length > 0 && (
                         <div className={styles.requestsSection}>
-                            <h3 className={styles.requestsTitle}>Có người muốn kết nối với bạn:</h3>
+                            <h3 className={styles.requestsTitle}>{t('pendingRequests')}</h3>
                             {pendingRequests.map(r => (
                                 <div className={styles.requestCard} key={r.id}>
                                     <div className={styles.requestInfo}>
@@ -227,13 +256,13 @@ export const CouplePage: React.FC = () => {
                                             className={styles.acceptBtn}
                                             onClick={() => handleRespond(r.id, true)}
                                         >
-                                            ✓ Chấp nhận
+                                            ✓ {t('accept')}
                                         </button>
                                         <button
                                             className={styles.rejectBtn}
                                             onClick={() => handleRespond(r.id, false)}
                                         >
-                                            ✕ Từ chối
+                                            ✕ {t('reject')}
                                         </button>
                                     </div>
                                 </div>
@@ -258,18 +287,18 @@ export const CouplePage: React.FC = () => {
                 </div>
 
                 {/* Title */}
-                <h1 className={styles.title}>Waiting for your better half...</h1>
+                <h1 className={styles.title}>{t('waitingTitle')}</h1>
                 <p className={styles.subtitle}>
-                    Connect with your partner to start building your 12-month memory timeline together.
+                    {t('waitingSubtitle')}
                 </p>
 
                 {/* Cards Container */}
                 <div className={styles.cardsContainer}>
                     {/* Your Invite Code Card */}
                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>Your Invite Code</h3>
+                        <h3 className={styles.cardTitle}>{t('yourInviteCode')}</h3>
                         <p className={styles.cardDesc}>
-                            Share this code with your partner to sync your accounts.
+                            {t('shareCodeDesc')}
                         </p>
                         <div className={styles.codeBox}>
                             <span className={styles.code}>{inviteCode}</span>
@@ -278,25 +307,25 @@ export const CouplePage: React.FC = () => {
                             </button>
                         </div>
                         <button className={styles.shareBtn} onClick={copyInviteCode}>
-                            <span>📤</span> Share Invite
+                            <span>📤</span> {t('shareInvite')}
                         </button>
                     </div>
 
                     {/* Enter Partner's Code Card */}
                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>Enter Partner's Code</h3>
+                        <h3 className={styles.cardTitle}>{t('enterPartnerCode')}</h3>
                         <p className={styles.cardDesc}>
-                            Have an invite code from your partner? Paste it here.
+                            {t('enterCodeDesc')}
                         </p>
                         <input
                             type="text"
                             className={styles.codeInput}
-                            placeholder="e.g. HEART-1234"
+                            placeholder={t('codePlaceholder')}
                             value={partnerCode}
                             onChange={(e) => setPartnerCode(e.target.value)}
                         />
                         <button className={styles.connectBtn} onClick={handleConnect}>
-                            <span>🔗</span> Connect Now
+                            <span>🔗</span> {t('connectNow')}
                         </button>
                     </div>
                 </div>
@@ -307,25 +336,25 @@ export const CouplePage: React.FC = () => {
                 {/* Pending Requests */}
                 {pendingRequests.length > 0 && (
                     <div className={styles.requestsSection}>
-                        <h3 className={styles.requestsTitle}>Yêu cầu kết nối đang chờ:</h3>
+                        <h3 className={styles.requestsTitle}>{t('pendingRequests')}</h3>
                         {pendingRequests.map(r => (
                             <div className={styles.requestCard} key={r.id}>
                                 <div className={styles.requestInfo}>
                                     <span className={styles.requestAvatar}>👤</span>
-                                    <span>{r.fromUser?.displayName || r.fromUser?.username || 'Ai đó'} muốn kết nối với bạn</span>
+                                    <span>{r.fromUser?.displayName || r.fromUser?.username || 'Ai đó'} {t('someoneWantsConnect')}</span>
                                 </div>
                                 <div className={styles.requestActions}>
                                     <button
                                         className={styles.acceptBtn}
                                         onClick={() => handleRespond(r.id, true)}
                                     >
-                                        ✓ Chấp nhận
+                                        ✓ {t('accept')}
                                     </button>
                                     <button
                                         className={styles.rejectBtn}
                                         onClick={() => handleRespond(r.id, false)}
                                     >
-                                        ✕ Từ chối
+                                        ✕ {t('reject')}
                                     </button>
                                 </div>
                             </div>
@@ -348,9 +377,6 @@ export const CouplePage: React.FC = () => {
                             <span>👤</span>
                         </div>
                     </div>
-                    <p className={styles.visualText}>
-                        Once connected, you'll be able to share photos and create your story together.
-                    </p>
                 </div>
             </div>
             );

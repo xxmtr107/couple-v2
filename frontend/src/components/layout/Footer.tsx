@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../../config/i18n';
 import styles from './Footer.module.css';
 
 export const Footer: React.FC = () => {
+    const { t } = useTranslation();
     const currentYear = new Date().getFullYear();
 
     return (
@@ -10,10 +12,9 @@ export const Footer: React.FC = () => {
             <div className={styles.container}>
                 {/* Footer Links */}
                 <div className={styles.links}>
-                    <Link to="/privacy" className={styles.link}>Privacy Policy</Link>
-                    <Link to="/terms" className={styles.link}>Terms of Service</Link>
-                    <Link to="/about" className={styles.link}>Our Archive</Link>
-                    <Link to="/contact" className={styles.link}>Contact Us</Link>
+                    <Link to="/settings" className={styles.link}>{t('settings')}</Link>
+                    <Link to="/couple" className={styles.link}>{t('couple')}</Link>
+                    <Link to="/profile" className={styles.link}>{t('profile')}</Link>
                 </div>
 
                 {/* Heart Icon */}
@@ -23,10 +24,10 @@ export const Footer: React.FC = () => {
 
                 {/* Copyright */}
                 <p className={styles.copyright}>
-                    Captured with love, 2023-{currentYear}
+                    {t('madeWithLove')}
                 </p>
                 <p className={styles.brand}>
-                    © {currentYear} HEARTLINK MEMORIES. ALL RIGHTS RESERVED.
+                    © {currentYear} HEARTLINK. {t('allRightsReserved')}
                 </p>
             </div>
         </footer>
