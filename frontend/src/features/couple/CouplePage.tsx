@@ -120,10 +120,14 @@ export const CouplePage: React.FC = () => {
         );
     }
 
+    // Kiểm tra couple có valid không (phải có id và user1/user2)
+    const hasValidCouple = couple && couple.id && (couple.user1 || couple.user2);
+
     // Nếu đã có couple - hiển thị thông tin và nút đến gallery
-    if (couple) {
+    if (hasValidCouple) {
         // Dùng daysTogether từ API nếu có, fallback sang tính local
-        const daysTogether = (couple as any).daysTogether ?? coupleService.getDaysTogether(couple.createdAt);
+        const daysTogether = (couple as any).daysTogether ??
+            (couple.createdAt ? coupleService.getDaysTogether(couple.createdAt) : 0);
 
         return (
             <PageLayout>
