@@ -49,4 +49,11 @@ public class AuthController {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(ApiResponse.success("Login successful", response));
     }
+
+    @Operation(summary = "Ping endpoint", description = "Simple ping endpoint for uptime monitoring.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Pong")
+    @RequestMapping(value = "/ping", method = org.springframework.web.bind.annotation.RequestMethod.GET)
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong");
+    }
 }

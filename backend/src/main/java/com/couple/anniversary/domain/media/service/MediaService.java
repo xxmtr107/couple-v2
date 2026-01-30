@@ -12,6 +12,9 @@ import com.couple.anniversary.domain.media.repository.MediaFileRepository;
 import com.couple.anniversary.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -19,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -158,6 +163,37 @@ public class MediaService {
                 .createdAt(mediaFile.getCreatedAt())
                 // Link trực tiếp từ Cloudinary luôn, không cần download qua server mình nữa
                 .downloadUrl(mediaFile.getPath())
+                .caption(mediaFile.getCaption())
+                .tags(mediaFile.getTags())
+                .mediaDate(mediaFile.getMediaDate())
                 .build();
+    }
+
+    /**
+     * Pagination: Lấy media theo couple với phân trang
+     */
+    public Page<MediaFileResponse> getMediaByCoupleId(Long coupleId, String type, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MediaFile> mediaPage;
+        if (type == null || type.equalsIgnoreCase(AppConstants.MEDIA_TYPE_ALL)) {
+            mediaPage = mediaFileRepository.findByCoupleIdOrderByMediaDateDesc(coupleId, pageable);
+        } else {
+            mediaPage = mediaFileRepository.findByCoupleIdAndTypeOrderByMediaDateDesc(coupleId, type.toUpperCase(),
+                    pageable);
+        }
+        return mediaPage.map(this::toResponse);
+    }
+
+    /**
+     * On This Day: Lấy ảnh của ngày này các năm trước
+     */
+    public List<MediaFileResponse> getOnThisDay(Long coupleId) {
+        LocalDate today = LocalDate.now(ZoneId.systemDefault());
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        int currentYear = today.getYear();
+
+        List<MediaFile> files = mediaFileRepository.findOnThisDay(coupleId, month, day, currentYear);
+        return files.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }

@@ -21,4 +21,9 @@ public class MediaFileResponse {
     private String type;
     private Instant createdAt;
     private String downloadUrl;
+
+    // THÊM CÁC TRƯỜNG NÀY:
+    private String caption;
+    private String tags;        // hoặc List<String> tags
+    private Instant mediaDate;
 }

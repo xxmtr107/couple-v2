@@ -47,6 +47,9 @@ public class User {
     @Column(name = "couple_id")
     private Long coupleId;
 
+    @Column(name = "invite_code", unique = true)
+    private String inviteCode;
+
     @Column(name = "created_at")
     private Instant createdAt;
 
