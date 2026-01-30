@@ -5,3 +5,4 @@ export * from './couple';
 export * from './settings';
 export * from './specialdate';
 export * from './notification';
+export * from './profile';

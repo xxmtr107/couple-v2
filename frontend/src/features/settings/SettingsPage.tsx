@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { settingsService } from '../../services/settingsService';
+import { coupleService } from '../../services/coupleService';
 import { CoupleSettings } from '../../types';
 import styles from './SettingsPage.module.css';
 
 export const SettingsPage: React.FC = () => {
     const [settings, setSettings] = useState<CoupleSettings | null>(null);
     const [message, setMessage] = useState('');
+    const [hasCouple, setHasCouple] = useState(false);
+    const [showBreakupConfirm, setShowBreakupConfirm] = useState(false);
+    const [breakupLoading, setBreakupLoading] = useState(false);
 
     useEffect(() => {
         settingsService.getSettings().then(setSettings).catch(() => { });
+        coupleService.getMyCouple().then(couple => {
+            setHasCouple(!!couple);
+        }).catch(() => { });
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -23,6 +30,22 @@ export const SettingsPage: React.FC = () => {
             setMessage('Đã lưu cài đặt!');
         } catch {
             setMessage('Lưu thất bại!');
+        }
+    };
+
+    const handleBreakup = async () => {
+        setBreakupLoading(true);
+        try {
+            await coupleService.breakup();
+            setMessage('Đã hủy kết nối thành công.');
+            setHasCouple(false);
+            setShowBreakupConfirm(false);
+            // Redirect to couple page after breakup
+            window.location.href = '/couple';
+        } catch {
+            setMessage('Hủy kết nối thất bại. Vui lòng thử lại.');
+        } finally {
+            setBreakupLoading(false);
         }
     };
 
@@ -59,6 +82,47 @@ export const SettingsPage: React.FC = () => {
             </label>
             <button className={styles.button} onClick={handleSave}>Lưu</button>
             {message && <p className={styles.message}>{message}</p>}
+
+            {/* Danger Zone - Breakup */}
+            {hasCouple && (
+                <div className={styles.dangerZone}>
+                    <h3 className={styles.dangerTitle}>⚠️ Vùng nguy hiểm</h3>
+                    <p className={styles.dangerDesc}>
+                        Hủy kết nối sẽ xóa toàn bộ dữ liệu chung. Hành động này không thể hoàn tác.
+                    </p>
+
+                    {!showBreakupConfirm ? (
+                        <button
+                            className={styles.breakupBtn}
+                            onClick={() => setShowBreakupConfirm(true)}
+                        >
+                            💔 Hủy kết nối
+                        </button>
+                    ) : (
+                        <div className={styles.confirmBox}>
+                            <p className={styles.confirmText}>
+                                Bạn có chắc chắn muốn hủy kết nối?
+                            </p>
+                            <div className={styles.confirmActions}>
+                                <button
+                                    className={styles.confirmYes}
+                                    onClick={handleBreakup}
+                                    disabled={breakupLoading}
+                                >
+                                    {breakupLoading ? 'Đang xử lý...' : 'Xác nhận hủy'}
+                                </button>
+                                <button
+                                    className={styles.confirmNo}
+                                    onClick={() => setShowBreakupConfirm(false)}
+                                    disabled={breakupLoading}
+                                >
+                                    Hủy bỏ
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

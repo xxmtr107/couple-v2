@@ -57,7 +57,8 @@ html {
 
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--gradient-accent);
+    /* Cream pink pastel - white gradient background */
+    background: linear-gradient(180deg, #fff8f9 0%, #fff0f3 30%, #ffe8ed 60%, #fff5f7 100%);
     background-attachment: fixed;
     min-height: 100vh;
     color: var(--color-text-primary);

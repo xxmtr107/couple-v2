@@ -13,7 +13,8 @@ export function useAuth() {
         try {
             const token = await authService.login(username, password);
             authService.setToken(token);
-            navigate('/');
+            // Chuyển đến trang couple sau khi đăng nhập
+            navigate('/couple');
         } catch {
             setError('Sai tài khoản hoặc mật khẩu 💔');
         } finally {

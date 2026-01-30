@@ -7,9 +7,13 @@ function groupByMonthYear(media: Media[]) {
     const groups: { [key: string]: Media[] } = {};
     media.forEach(item => {
         const date = item.mediaDate || item.createdAt || '';
-        if (!date) return;
-        const d = new Date(date);
-        const key = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+        let key = 'unknown'; // Nhóm mặc định nếu không có ngày
+        if (date) {
+            const d = new Date(date);
+            if (!isNaN(d.getTime())) {
+                key = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+            }
+        }
         if (!groups[key]) groups[key] = [];
         groups[key].push(item);
     });
@@ -40,10 +44,11 @@ export const MediaTimeline: React.FC<MediaTimelineProps> = ({ media, onDownload,
         <div>
             {sortedKeys.map(key => {
                 const [year, month] = key.split('-');
+                const label = key === 'unknown' ? 'Chưa xác định ngày' : `Tháng ${month}/${year}`;
                 return (
                     <div key={key} className={styles.timelineGroup}>
                         <h2 className={styles.timelineMonth}>
-                            Tháng {month}/{year}
+                            {label}
                         </h2>
                         <MediaGrid media={groups[key]} onDownload={onDownload} onDelete={onDelete} />
                     </div>

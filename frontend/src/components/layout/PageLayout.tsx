@@ -1,18 +1,22 @@
 import React from 'react';
-import { Header } from './Header';
+import { Navbar } from './Navbar';
+import { Footer } from './Footer';
 import styles from './PageLayout.module.css';
 
 interface PageLayoutProps {
     children: React.ReactNode;
-    showHeader?: boolean;
+    showNavbar?: boolean;
+    showFooter?: boolean;
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
     children,
-    showHeader = true
+    showNavbar = true,
+    showFooter = true
 }) => {
     return (
         <div className={styles.page}>
+            {/* Floating Hearts Background */}
             <div className={styles.floatingHearts}>
                 {[...Array(6)].map((_, i) => (
                     <span key={i} className={styles.floatingHeart} style={{ '--delay': `${i * 0.5}s` } as React.CSSProperties}>
@@ -20,10 +24,15 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                     </span>
                 ))}
             </div>
-            <div className={styles.container}>
-                {showHeader && <Header />}
-                <main className={styles.main}>{children}</main>
-            </div>
+
+            {/* Navbar */}
+            {showNavbar && <Navbar />}
+
+            {/* Main Content */}
+            <main className={styles.main}>{children}</main>
+
+            {/* Footer */}
+            {showFooter && <Footer />}
         </div>
     );
 };

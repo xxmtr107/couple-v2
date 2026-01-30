@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,7 @@ public class AuthService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(AppConstants.DEFAULT_ROLE)
+                .inviteCode(generateInviteCode())
                 .build();
 
         userRepository.save(user);
@@ -64,5 +67,9 @@ public class AuthService {
                 .username(user.getUsername())
                 .role(user.getRole())
                 .build();
+    }
+
+    private String generateInviteCode() {
+        return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 }

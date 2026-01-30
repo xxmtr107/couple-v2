@@ -1,0 +1,20 @@
+declare const styles: {
+    readonly container: string;
+    readonly loading: string;
+    readonly loadingIcon: string;
+    readonly header: string;
+    readonly icon: string;
+    readonly headerText: string;
+    readonly title: string;
+    readonly date: string;
+    readonly memoriesContainer: string;
+    readonly yearSection: string;
+    readonly yearBadge: string;
+    readonly memoriesGrid: string;
+    readonly memoryCard: string;
+    readonly memoryMedia: string;
+    readonly overlay: string;
+    readonly playIcon: string;
+    readonly caption: string;
+};
+export default styles;

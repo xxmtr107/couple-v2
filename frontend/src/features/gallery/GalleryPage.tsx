@@ -1,58 +1,77 @@
-import React from 'react';
-import { PageLayout, FilterChips } from '../../components';
-import { MediaTimeline } from '../../components/media/MediaTimeline';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PageLayout } from '../../components';
+import { YearTimeline } from '../../components/media/YearTimeline';
+import { AlbumDetail } from '../../components/media/AlbumDetail';
+import { OnThisDay } from '../../components/media/OnThisDay';
 import { useMedia } from '../../hooks/useMedia';
 import styles from './GalleryPage.module.css';
 
+interface SelectedAlbum {
+    year: number;
+    month: number;
+}
+
 const GalleryPage: React.FC = () => {
-    const { media, filter, setFilter, caption, setCaption, tag, setTag, date, setDate, deleteMedia, downloadMedia, loading } = useMedia();
+    const { media, deleteMedia, downloadMedia, loading } = useMedia();
+    const [selectedAlbum, setSelectedAlbum] = useState<SelectedAlbum | null>(null);
+    const navigate = useNavigate();
+
+    // Lọc media theo tháng đã chọn
+    const getMonthMedia = (year: number, month: number) => {
+        return media.filter(item => {
+            const date = item.mediaDate || item.createdAt || '';
+            if (!date) return false;
+            const d = new Date(date);
+            return d.getFullYear() === year && d.getMonth() + 1 === month;
+        });
+    };
+
+    const handleAlbumClick = (year: number, month: number) => {
+        setSelectedAlbum({ year, month });
+    };
+
+    const handleBack = () => {
+        setSelectedAlbum(null);
+    };
 
     return (
         <PageLayout>
             <div className={styles.container}>
-                <div className={styles.intro}>
-                    <h2 className={styles.title}>Kỷ niệm của chúng mình ✨</h2>
-                    <p className={styles.subtitle}>
-                        Mỗi bức ảnh là một câu chuyện, mỗi khoảnh khắc là một kỷ niệm đẹp 💕
-                    </p>
-                </div>
-
-                <FilterChips value={filter} onChange={setFilter} />
-
-                <div style={{ display: 'flex', gap: 12, margin: '18px 0 24px 0', flexWrap: 'wrap' }}>
-                    <input
-                        type="text"
-                        placeholder="Tìm caption..."
-                        value={caption}
-                        onChange={e => setCaption(e.target.value)}
-                        style={{ padding: 8, borderRadius: 8, border: '1px solid #ffd6e0', minWidth: 120 }}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Tìm tag..."
-                        value={tag}
-                        onChange={e => setTag(e.target.value)}
-                        style={{ padding: 8, borderRadius: 8, border: '1px solid #ffd6e0', minWidth: 120 }}
-                    />
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={e => setDate(e.target.value)}
-                        style={{ padding: 8, borderRadius: 8, border: '1px solid #ffd6e0', minWidth: 120 }}
-                    />
-                </div>
-
                 {loading ? (
                     <div className={styles.loading}>
                         <span className={styles.loadingIcon}>💝</span>
                         <p>Đang tải kỷ niệm...</p>
                     </div>
-                ) : (
-                    <MediaTimeline
-                        media={media}
+                ) : selectedAlbum ? (
+                    <AlbumDetail
+                        year={selectedAlbum.year}
+                        month={selectedAlbum.month}
+                        media={getMonthMedia(selectedAlbum.year, selectedAlbum.month)}
+                        onBack={handleBack}
                         onDownload={downloadMedia}
                         onDelete={deleteMedia}
                     />
+                ) : (
+                    <>
+                        {/* On This Day Memories */}
+                        <OnThisDay />
+
+                        <YearTimeline
+                            media={media}
+                            onAlbumClick={handleAlbumClick}
+                        />
+
+                        {/* Upload CTA Button */}
+                        <div className={styles.uploadCta}>
+                            <button
+                                className={styles.uploadButton}
+                                onClick={() => navigate('/upload')}
+                            >
+                                📸 Upload New Photos
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
         </PageLayout>

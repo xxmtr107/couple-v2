@@ -1,0 +1,82 @@
+/* Footer Styles */
+.footer {
+    background: linear-gradient(180deg, rgba(255, 246, 248, 0) 0%, rgba(255, 235, 240, 0.8) 100%);
+    padding: 50px 24px 30px;
+    margin-top: auto;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Links */
+.links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.link {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #e84a7f;
+}
+
+/* Heart Section */
+.heartSection {
+    margin-bottom: 20px;
+}
+
+.heart {
+    font-size: 1.8rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Copyright */
+.copyright {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin: 0 0 8px;
+}
+
+.brand {
+    color: #ccc;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .links {
+        gap: 20px;
+    }
+
+    .link {
+        font-size: 0.85rem;
+    }
+}

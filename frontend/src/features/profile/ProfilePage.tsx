@@ -1,0 +1,219 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { userService, UserProfile } from '../../services/userService';
+import styles from './ProfilePage.module.css';
+
+export const ProfilePage: React.FC = () => {
+    const navigate = useNavigate();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [profile, setProfile] = useState<UserProfile>({
+        id: 0,
+        username: '',
+        displayName: '',
+        email: '',
+        birthday: '',
+        avatarUrl: '',
+    });
+    const [previewUrl, setPreviewUrl] = useState<string>('');
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                const userData = await userService.getMe();
+                setProfile(userData);
+                if (userData.avatarUrl) {
+                    setPreviewUrl(userData.avatarUrl);
+                }
+            } catch {
+                // Fallback to localStorage
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    try {
+                        const userData = JSON.parse(savedUser);
+                        setProfile(prev => ({ ...prev, ...userData }));
+                        if (userData.avatarUrl) {
+                            setPreviewUrl(userData.avatarUrl);
+                        }
+                    } catch { }
+                }
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+        loadProfile();
+    }, []);
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Preview immediately
+        const reader = new FileReader();
+        reader.onload = () => {
+            setPreviewUrl(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to server
+        try {
+            const result = await userService.uploadAvatar(file);
+            setPreviewUrl(result.avatarUrl);
+            setProfile(prev => ({ ...prev, avatarUrl: result.avatarUrl }));
+            setMessage('Avatar đã được cập nhật! 📸');
+        } catch {
+            setMessage('Upload avatar thất bại!');
+        }
+        setTimeout(() => setMessage(''), 3000);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setProfile(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSave = async () => {
+        setLoading(true);
+
+        try {
+            await userService.updateProfile({
+                displayName: profile.displayName,
+                email: profile.email,
+                birthday: profile.birthday,
+            });
+
+            // Also update localStorage for fallback
+            localStorage.setItem('user', JSON.stringify(profile));
+
+            setMessage('Đã lưu thông tin! 💕');
+        } catch {
+            setMessage('Lưu thất bại, thử lại nhé!');
+        } finally {
+            setLoading(false);
+            setTimeout(() => setMessage(''), 3000);
+        }
+    };
+
+    if (initialLoading) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.loading}>
+                    <span>💕</span>
+                    <p>Đang tải...</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className={styles.container}>
+            {/* Background decorations */}
+            <div className={styles.bgDecor1}></div>
+            <div className={styles.bgDecor2}></div>
+
+            <div className={styles.profileCard}>
+                {/* Avatar Section */}
+                <div className={styles.avatarSection}>
+                    <div className={styles.avatarWrapper} onClick={handleAvatarClick}>
+                        {previewUrl ? (
+                            <img src={previewUrl} alt="Avatar" className={styles.avatarImg} />
+                        ) : (
+                            <span className={styles.avatarPlaceholder}>👤</span>
+                        )}
+                        <div className={styles.avatarOverlay}>
+                            <span>📷</span>
+                        </div>
+                    </div>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className={styles.hiddenInput}
+                    />
+                    <p className={styles.avatarHint}>Click để thay đổi avatar</p>
+                </div>
+
+                {/* Profile Form */}
+                <div className={styles.formSection}>
+                    <h2 className={styles.title}>Thông tin cá nhân</h2>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            value={profile.username}
+                            onChange={handleChange}
+                            className={styles.input}
+                            placeholder="username"
+                            disabled
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Tên hiển thị</label>
+                        <input
+                            type="text"
+                            name="displayName"
+                            value={profile.displayName}
+                            onChange={handleChange}
+                            className={styles.input}
+                            placeholder="Tên của bạn"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={profile.email}
+                            onChange={handleChange}
+                            className={styles.input}
+                            placeholder="email@example.com"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Ngày sinh</label>
+                        <input
+                            type="date"
+                            name="birthday"
+                            value={profile.birthday}
+                            onChange={handleChange}
+                            className={styles.input}
+                        />
+                    </div>
+
+                    {message && <p className={styles.message}>{message}</p>}
+
+                    <div className={styles.actions}>
+                        <button
+                            className={styles.saveBtn}
+                            onClick={handleSave}
+                            disabled={loading}
+                        >
+                            {loading ? 'Đang lưu...' : '💾 Lưu thay đổi'}
+                        </button>
+                        <button
+                            className={styles.backBtn}
+                            onClick={() => navigate(-1)}
+                        >
+                            ← Quay lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProfilePage;

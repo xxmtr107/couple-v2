@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
-import { LoginPage, RegisterPage, GalleryPage, UploadPage, CouplePage, SettingsPage, SpecialDatePage } from '../features';
+import { LoginPage, RegisterPage, GalleryPage, UploadPage, CouplePage, SettingsPage, SpecialDatePage, ProfilePage } from '../features';
 import { NotificationList } from '../features';
 
 export const AppRoutes = () => {
@@ -21,6 +21,14 @@ export const AppRoutes = () => {
                     }
                 />
                 <Route
+                    path="/timeline"
+                    element={
+                        <PrivateRoute>
+                            <GalleryPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/upload"
                     element={
                         <PrivateRoute>
@@ -33,6 +41,14 @@ export const AppRoutes = () => {
                     element={
                         <PrivateRoute>
                             <CouplePage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <PrivateRoute>
+                            <ProfilePage />
                         </PrivateRoute>
                     }
                 />

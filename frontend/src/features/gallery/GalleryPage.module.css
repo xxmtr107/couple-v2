@@ -1,5 +1,6 @@
 .container {
     position: relative;
+    min-height: 100vh;
 }
 
 .intro {
@@ -23,7 +24,7 @@
 .loading {
     text-align: center;
     padding: 4rem 2rem;
-    color: #fff;
+    color: #333;
 }
 
 .loadingIcon {
@@ -47,6 +48,37 @@
     }
 }
 
+/* Upload CTA */
+.uploadCta {
+    text-align: center;
+    padding: 20px 0 40px;
+}
+
+.uploadButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #ff6b95 0%, #ff8fab 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 25px rgba(255, 107, 149, 0.4);
+}
+
+.uploadButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 35px rgba(255, 107, 149, 0.5);
+}
+
+.uploadButton:active {
+    transform: translateY(-1px);
+}
+
 @media (max-width: 600px) {
     .title {
         font-size: 1.4rem;
@@ -54,5 +86,10 @@
 
     .subtitle {
         font-size: 0.9rem;
+    }
+
+    .uploadButton {
+        padding: 14px 32px;
+        font-size: 1rem;
     }
 }

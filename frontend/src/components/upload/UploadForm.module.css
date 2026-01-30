@@ -1,107 +1,118 @@
+/* ======================
+   CARD
+====================== */
 .card {
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
 }
 
+/* ======================
+   DROPZONE
+====================== */
 .dropzone {
+    display: block;
     border: 3px dashed #ffb3c6;
-    border-radius: 20px;
-    padding: 3rem 2rem;
+    border-radius: 22px;
+    padding: 2.5rem 1.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255, 214, 224, 0.2);
+    transition: all 0.25s ease;
+    background: rgba(255, 214, 224, 0.25);
 }
 
-.dropzone:hover,
-.dragActive {
+.dropzone:hover {
     border-color: #ff8fab;
-    background: rgba(255, 179, 198, 0.2);
+    background: rgba(255, 179, 198, 0.3);
     transform: scale(1.02);
 }
 
-.hasPreview {
-    padding: 1rem;
-}
-
+/* ======================
+   PLACEHOLDER
+====================== */
 .placeholder {
     pointer-events: none;
 }
 
-.icon {
-    font-size: 4rem;
+.placeholder span {
+    font-size: 3.8rem;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     animation: bounce 2s ease-in-out infinite;
 }
 
-@keyframes bounce {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-.text {
+.placeholder p {
     margin: 0;
     color: #ff8fab;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 500;
 }
 
-.subtext {
-    font-size: 0.9rem;
-    color: #c9a7b3;
-    font-weight: 400;
-}
-
-.input {
+.placeholder small {
     display: block;
-    margin: 8px auto 8px auto;
-    width: 90%;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid #ffd6e0;
-    font-size: 1rem;
-    background: #fff;
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: #c9a7b3;
 }
 
+/* ======================
+   INPUT (caption, tag, date)
+====================== */
+.input {
+    width: 92%;
+    margin: 8px auto;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid #ffd6e0;
+    font-size: 0.95rem;
+    background: #fff;
+    outline: none;
+    transition: border 0.2s ease;
+}
+
+.input:focus {
+    border-color: #ff8fab;
+}
+
+/* ======================
+   PREVIEW LIST
+====================== */
 .previewList {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    margin-bottom: 8px;
+    margin-top: 10px;
 }
 
+/* ======================
+   PREVIEW ITEM
+====================== */
 .previewItem {
     position: relative;
     background: #fff0f6;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px #ffe0ec;
-    padding: 18px 12px 12px 12px;
-    margin-bottom: 4px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(255, 160, 190, 0.25);
+    padding: 16px 12px 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.previewWrapper {
-    position: relative;
-}
-
+/* ======================
+   IMAGE / VIDEO
+====================== */
 .preview {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 12px;
+    width: 100%;
+    max-height: 320px;
+    border-radius: 14px;
     object-fit: contain;
+    margin-bottom: 8px;
+    background: #fff;
 }
 
+/* ======================
+   REMOVE BUTTON
+====================== */
 .removeBtn {
     position: absolute;
     top: -10px;
@@ -117,22 +128,71 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .removeBtn:hover {
-    background: #ff5a7d;
+    background: #ff5074;
     transform: scale(1.1);
 }
 
+/* ======================
+   ERROR
+====================== */
 .error {
-    color: #ff6b8a;
+    color: #ff5074;
     text-align: center;
-    margin: 1rem 0 0;
+    margin-top: 1rem;
     font-size: 0.9rem;
 }
 
+/* ======================
+   SUBMIT BUTTON
+====================== */
 .submitBtn {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: 1.6rem;
+}
+
+/* ======================
+   HIDDEN INPUT
+====================== */
+.hiddenInput {
+    display: none;
+}
+
+/* ======================
+   ANIMATION
+====================== */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ======================
+   MOBILE FIX
+====================== */
+@media (max-width: 480px) {
+    .card {
+        padding: 1.5rem 1rem;
+    }
+
+    .dropzone {
+        padding: 2rem 1rem;
+    }
+
+    .preview {
+        max-height: 240px;
+    }
+
+    .input {
+        width: 95%;
+    }
 }
