@@ -24,7 +24,18 @@ export const ProfilePage: React.FC = () => {
         const loadProfile = async () => {
             try {
                 const userData = await userService.getMe();
-                setProfile(userData);
+                // Convert birthday từ Instant về YYYY-MM-DD để hiển thị trong input date
+                let birthdayForInput = '';
+                if (userData.birthday) {
+                    const date = new Date(userData.birthday);
+                    if (!isNaN(date.getTime())) {
+                        birthdayForInput = date.toISOString().split('T')[0];
+                    }
+                }
+                setProfile({
+                    ...userData,
+                    birthday: birthdayForInput,
+                });
                 if (userData.avatarUrl) {
                     setPreviewUrl(userData.avatarUrl);
                 }
@@ -55,6 +66,21 @@ export const ProfilePage: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setMessage('Chỉ chấp nhận file ảnh!');
+            setTimeout(() => setMessage(''), 3000);
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            setMessage('File quá lớn! Tối đa 5MB.');
+            setTimeout(() => setMessage(''), 3000);
+            return;
+        }
+
         // Preview immediately
         const reader = new FileReader();
         reader.onload = () => {
@@ -63,13 +89,19 @@ export const ProfilePage: React.FC = () => {
         reader.readAsDataURL(file);
 
         // Upload to server
+        setMessage('Đang upload...');
         try {
             const result = await userService.uploadAvatar(file);
-            setPreviewUrl(result.avatarUrl);
-            setProfile(prev => ({ ...prev, avatarUrl: result.avatarUrl }));
-            setMessage('Avatar đã được cập nhật! 📸');
-        } catch {
-            setMessage('Upload avatar thất bại!');
+            if (result.avatarUrl) {
+                setPreviewUrl(result.avatarUrl);
+                setProfile(prev => ({ ...prev, avatarUrl: result.avatarUrl }));
+                setMessage('Avatar đã được cập nhật! 📸');
+            } else {
+                setMessage('Upload thất bại - không nhận được URL');
+            }
+        } catch (err) {
+            console.error('Upload error:', err);
+            setMessage('Upload avatar thất bại! Thử ảnh nhỏ hơn.');
         }
         setTimeout(() => setMessage(''), 3000);
     };

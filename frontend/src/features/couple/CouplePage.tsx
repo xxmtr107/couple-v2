@@ -132,7 +132,7 @@ export const CouplePage: React.FC = () => {
                         {/* Avatar của 2 người */}
                         <div className={styles.coupleAvatars}>
                             <div className={styles.avatarWrapper}>
-                                {couple.user1.avatarUrl ? (
+                                {couple.user1?.avatarUrl ? (
                                     <img src={couple.user1.avatarUrl} alt={couple.user1.displayName || couple.user1.username} className={styles.coupleAvatar} />
                                 ) : (
                                     <span className={styles.avatarPlaceholder}>👤</span>
@@ -140,7 +140,7 @@ export const CouplePage: React.FC = () => {
                             </div>
                             <span className={styles.heartBetween}>💕</span>
                             <div className={styles.avatarWrapper}>
-                                {couple.user2.avatarUrl ? (
+                                {couple.user2?.avatarUrl ? (
                                     <img src={couple.user2.avatarUrl} alt={couple.user2.displayName || couple.user2.username} className={styles.coupleAvatar} />
                                 ) : (
                                     <span className={styles.avatarPlaceholder}>👤</span>
@@ -149,9 +149,9 @@ export const CouplePage: React.FC = () => {
                         </div>
                         <h2>Đã kết nối!</h2>
                         <p className={styles.coupleNames}>
-                            {couple.user1.displayName || couple.user1.username}
+                            {couple.user1?.displayName || couple.user1?.username || 'Bạn'}
                             {' '} & {' '}
-                            {couple.user2.displayName || couple.user2.username}
+                            {couple.user2?.displayName || couple.user2?.username || 'Người ấy'}
                         </p>
                         <div className={styles.daysCounter}>
                             <span className={styles.daysNumber}>{daysTogether}</span>

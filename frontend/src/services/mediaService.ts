@@ -108,9 +108,8 @@ export const mediaService = {
     },
 
     async upload(formData: FormData): Promise<Media> {
-        const response = await api.post<ApiResponse<Media> | Media>('/media/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        // KHÔNG set Content-Type header - để browser tự thêm boundary cho multipart
+        const response = await api.post<ApiResponse<Media> | Media>('/media/upload', formData);
 
         const data = response.data;
         // Handle wrapper format
