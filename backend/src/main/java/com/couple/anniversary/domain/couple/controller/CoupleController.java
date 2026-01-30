@@ -75,7 +75,7 @@ public class CoupleController {
     @Operation(summary = "Cancel sent request", description = "Cancel a couple request that I sent")
     @DeleteMapping("/request/{id}")
     public ResponseEntity<ApiResponse<Void>> cancelRequest(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         coupleService.cancelCoupleRequest(id, user.getId());
@@ -85,7 +85,7 @@ public class CoupleController {
     @Operation(summary = "Accept couple request", description = "Accept a pending couple request")
     @PostMapping("/request/{id}/accept")
     public ResponseEntity<ApiResponse<CoupleResponse>> acceptRequest(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         Couple couple = coupleService.acceptCoupleRequest(id, user.getId());
@@ -95,7 +95,7 @@ public class CoupleController {
     @Operation(summary = "Reject couple request", description = "Reject a pending couple request")
     @PostMapping("/request/{id}/reject")
     public ResponseEntity<ApiResponse<Void>> rejectRequest(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         coupleService.rejectCoupleRequest(id, user.getId());

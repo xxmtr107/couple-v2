@@ -21,8 +21,10 @@ export const CouplePage: React.FC = () => {
             // Load current user from API
             try {
                 const user = await userService.getMe();
+                console.log('Loaded user:', user);
                 setCurrentUser(user);
-            } catch {
+            } catch (err) {
+                console.error('Failed to load user:', err);
                 // Fallback to localStorage
                 const savedUser = localStorage.getItem('user');
                 if (savedUser) {
@@ -170,7 +172,13 @@ export const CouplePage: React.FC = () => {
         );
     }
 
-    const inviteCode = currentUser?.inviteCode || 'Đang tải...';
+    // Generate inviteCode nếu backend chưa có
+    const generateInviteCode = (userId: number): string => {
+        return `HEART-${userId.toString().padStart(4, '0')}`;
+    };
+
+    const inviteCode = currentUser?.inviteCode ||
+        (currentUser?.id ? generateInviteCode(currentUser.id) : 'Đang tải...');
     const pendingRequests = requests.filter(r => r.status === 'PENDING');
 
     // Nếu đang chờ phản hồi từ người khác
@@ -185,7 +193,7 @@ export const CouplePage: React.FC = () => {
                         <span className={styles.waitingIcon}>⏳</span>
                         <h2 className={styles.waitingTitle}>Đang chờ phản hồi...</h2>
                         <p className={styles.waitingText}>
-                            Bạn đã gửi lời mời đến <strong>{sentRequest.toUser.displayName || sentRequest.toUser.username}</strong>
+                            Bạn đã gửi lời mời đến <strong>{sentRequest.toUser?.displayName || sentRequest.toUser?.username || 'người ấy'}</strong>
                         </p>
                         <p className={styles.waitingHint}>
                             Hãy chờ người ấy xác nhận nhé! 💕
@@ -212,7 +220,7 @@ export const CouplePage: React.FC = () => {
                                 <div className={styles.requestCard} key={r.id}>
                                     <div className={styles.requestInfo}>
                                         <span className={styles.requestAvatar}>👤</span>
-                                        <span>{r.fromUser.displayName || r.fromUser.username}</span>
+                                        <span>{r.fromUser?.displayName || r.fromUser?.username || 'Ai đó'}</span>
                                     </div>
                                     <div className={styles.requestActions}>
                                         <button
@@ -304,7 +312,7 @@ export const CouplePage: React.FC = () => {
                             <div className={styles.requestCard} key={r.id}>
                                 <div className={styles.requestInfo}>
                                     <span className={styles.requestAvatar}>👤</span>
-                                    <span>{r.fromUser.displayName || r.fromUser.username} muốn kết nối với bạn</span>
+                                    <span>{r.fromUser?.displayName || r.fromUser?.username || 'Ai đó'} muốn kết nối với bạn</span>
                                 </div>
                                 <div className={styles.requestActions}>
                                     <button
